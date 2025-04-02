@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aianlaysis.airequest.mapper.SrvyMapper">
+
+	<select id="selectSurveyQuestions" resultType="com.aianlaysis.airequest.model.SrvyVO">
+	    SELECT 
+	    	surveyNo,
+	    	email,
+	        group_no,
+	        srvyType,
+	        srvyCn,
+	        chc
+	    FROM AI_SRVY
+	    WHERE group_no = #{groupNo}  
+	</select>
+
+	<!-- /SrvyReg 만족도 문항 정보 삽입-->
+    <insert id="insertSurvey" parameterType="com.aianlaysis.airequest.model.SrvyVO">
+        INSERT INTO AI_SRVY (email, srvyType, srvyCn, cHc, group_no)
+        VALUES (#{email}, #{srvyType}, #{srvyCn}, #{chc}, #{groupNo})
+    </insert>
+    
+    <!--만족도 조사 번호, 해당 이메일로 찾기-->
+    <select id="selectByEmail" parameterType="map" resultType="com.aianlaysis.airequest.model.SrvyVO">
+	    SELECT * FROM 
+	    	AI_SRVY 
+	    WHERE group_no = #{groupNo} AND EMAIL = #{email}
+	</select>
+	
+	<!--해당 정보로 삭제-->
+	<delete id="deleteSrvy" parameterType="com.aianlaysis.airequest.model.SrvyVO">
+        DELETE FROM AI_SRVY 
+        WHERE surveyNo = #{surveyNo} AND email = #{email}
+    </delete>
+    
+    <!-- 새로운 전체 삭제 쿼리 추가 -->
+	<delete id="deleteAllSrvy">
+	    DELETE FROM AI_SRVY 
+	    WHERE email = #{email} AND group_no = #{groupNo}
+	</delete>
+	    
+    
+    <!-- 만족도 조사 수정 -->
+	<update id="updateSrvy" parameterType="com.aianlaysis.airequest.model.SrvyVO">
+    	UPDATE AI_SRVY
+    	SET srvyType = #{srvyType}, 
+        	srvyCn = #{srvyCn}, 
+        	chc = #{chc}
+    	WHERE surveyNo = #{surveyNo} 
+    	AND email = #{email}
+	</update>
+	
+	<!--만족도 조사 list by groupNo-->
+	<select id="findByGroupNo" parameterType="com.aianlaysis.airequest.model.SrvyVO">
+		select * from AI_SRVY WHERE group_no = #{groupNo}
+	</select>
+	
+</mapper>
